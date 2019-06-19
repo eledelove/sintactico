@@ -1,24 +1,49 @@
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 class cAnalisisSintactico{
 
 string tokenActual;
-int i;
+int i, numtokens;
 string tokens[30];
+ifstream inPrograma;
 
 public:
 //constructor
 cAnalisisSintactico(){
 
     i=0;
+    numtokens = 0;
     tokenActual="";
-    recuperaTokens();
 
+    inPrograma.open("programaTiny.txt");
+    try{
+    if(inPrograma.fail())
+        throw 0;
+    cout<<"Exito al abrir el programa"<<endl;
+    }catch(int i){
+        if(i=0){
+            cerr<<"Error al abrir el programa a analizar"<<endl;
+        }
+    }
+    recuperaTokens();
 }
 
 void recuperaTokens(){
-    //llenar el arreglo tokens
+    int j=0;
+    while(!inPrograma.eof()){
+        inPrograma>>tokens[j++];
+
+    }
+    numtokens = j;
+}
+
+void imprimeTokens(){
+
+    for(int i=0; i<numtokens; i++){
+        cout<<tokens[i]<<endl;
+    }
 }
 
 void match(string tokenEsperado){
@@ -36,12 +61,19 @@ string obtenSigToken(){
 
 
 void programa(){
+    //Token Actual inicializa vacio
+    tokenActual=obtenSigToken();
     secuencia_sent();
 }
 
 void secuencia_sent(){
-    secuencia_sent();
+    sentencia();
+    //secuencia_sent();
 
+}
+
+void sentencia(){
+    sentencia_asignacion();
 }
 
 void sentencia_if(){
@@ -51,21 +83,26 @@ void sentencia_if(){
 void sentencia_repeat(){
 
 }
-void sentencia_asignacion(){
 
+void sentencia_asignacion(){
+    expresion();
 }
+
 void sentencia_read(){
 
 }
+
 void sentencia_writet(){
 
 }
+
 void expresion(){
     exp_simple();
     if(tokenActual == "=" || tokenActual == "<")
         exp_simple();
 
 }
+
 void exp_simple(){
 
     termino();
@@ -86,7 +123,25 @@ void APrima(){
 
 void termino(){
 
+    factor();
+    if(tokenActual == "*" || tokenActual == "/"){
+        factor();
+    }
+    BPrima();
+
 }
+
+void BPrima(){
+
+    if(tokenActual == "*" || tokenActual == "/"){
+        match(tokenActual);
+        factor();
+    }
+    if(tokenActual == "*" || tokenActual == "/")
+        BPrima();
+}
+
+
 void factor(){
     if(tokenActual == "("){
         match("(");
@@ -97,20 +152,19 @@ void factor(){
 
     else if(isalpha(tokenActual[0]) || tokenActual[0] == '_'){
 
-
+        match(tokenActual);
     }
     else if(isdigit(tokenActual[0])){
-
+        match(tokenActual);
     }
     else cerr<<"Error en el factor";
 }
 
-
-
 };
 
 int main(){
-
-    cout<<"Hola Ionhatan" <<endl;
+    cAnalisisSintactico miAnalisis;
+    //miAnalisis.imprimeTokens();
+    miAnalisis.programa();
     return 0;
 }

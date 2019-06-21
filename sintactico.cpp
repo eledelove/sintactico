@@ -1,5 +1,7 @@
 #include <iostream>
 #include <fstream>
+#include <stdlib.h>
+
 using namespace std;
 
 class cAnalisisSintactico{
@@ -13,7 +15,7 @@ public:
 //constructor
 cAnalisisSintactico(){
 
-    i=0;
+    i=-1;
     numtokens = 0;
     tokenActual="";
 
@@ -48,8 +50,9 @@ void imprimeTokens(){
 
 void match(string tokenEsperado){
 
-    if(tokenActual == tokenEsperado)
+    if(tokenActual == tokenEsperado){
         tokenActual=obtenSigToken();
+    }
 
     else cerr<<"Error";
 }
@@ -64,6 +67,9 @@ void programa(){
     //Token Actual inicializa vacio
     tokenActual=obtenSigToken();
     secuencia_sent();
+
+    if(tokenActual != "")
+        cout<<"Error"<<endl;
 }
 
 void secuencia_sent(){
@@ -98,7 +104,7 @@ void sentencia_writet(){
 
 void expresion(){
     exp_simple();
-    if(tokenActual == "=" || tokenActual == "<")
+    if(tokenActual == "=" || tokenActual == "<") //(*pendiente a ejecutar)
         exp_simple();
 
 }
@@ -106,7 +112,7 @@ void expresion(){
 void exp_simple(){
 
     termino();
-    tokenActual = obtenSigToken();
+    //tokenActual = obtenSigToken();
     if(tokenActual == "+" || tokenActual == "-")
         APrima();
 

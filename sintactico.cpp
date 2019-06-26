@@ -54,7 +54,7 @@ void match(string tokenEsperado){
         tokenActual=obtenSigToken();
     }
 
-    else cerr<<"Error";
+    else cerr<<"Error en Match";
 }
 
 string obtenSigToken(){
@@ -69,7 +69,7 @@ void programa(){
     secuencia_sent();
 
     if(tokenActual != "")
-        cout<<"Error"<<endl;
+        cout<<"Error en programa"<<endl;
 }
 
 void secuencia_sent(){
@@ -79,11 +79,26 @@ void secuencia_sent(){
 }
 
 void sentencia(){
-    sentencia_asignacion();
+
+    if(tokenActual == "if")
+        sentencia_if();
+    else if(isalpha(tokenActual[0]))
+        sentencia_asignacion();
 }
 
 void sentencia_if(){
 
+    match("if");
+    expresion();
+    match("then");
+    secuencia_sent();
+    if(tokenActual == "end") match("end");
+    else if(tokenActual == "else"){
+        match("else");
+        secuencia_sent();
+        match("end");
+    }
+    else cerr<<"Error en la secuencia_if";
 }
 
 void sentencia_repeat(){
@@ -91,7 +106,12 @@ void sentencia_repeat(){
 }
 
 void sentencia_asignacion(){
-    expresion();
+    if(isalpha(tokenActual[0])){
+        tokenActual = obtenSigToken();
+        match(":=");
+        expresion();
+    }
+    else cerr<<"Error en sent assig";
 }
 
 void sentencia_read(){
@@ -104,8 +124,10 @@ void sentencia_writet(){
 
 void expresion(){
     exp_simple();
-    if(tokenActual == "=" || tokenActual == "<") //(*pendiente a ejecutar)
+    if(tokenActual == "=" || tokenActual == "<"){ //(*pendiente a ejecutar)
+        match(tokenActual);
         exp_simple();
+    }
 
 }
 
@@ -131,9 +153,9 @@ void termino(){
 
     factor();
     if(tokenActual == "*" || tokenActual == "/"){
-        factor();
+        BPrima();
     }
-    BPrima();
+
 
 }
 

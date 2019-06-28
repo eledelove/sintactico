@@ -72,18 +72,20 @@ void programa(){
         cout<<"Error en programa"<<endl;
 }
 
-void secuencia_sent(){
-    sentencia();
-    //secuencia_sent();
-
-}
 
 void sentencia(){
 
     if(tokenActual == "if")
         sentencia_if();
+    else if(tokenActual == "repeat")
+        sentencia_repeat();
+    else if(tokenActual == "read")
+        sentencia_read();
+    else if(tokenActual == "write")
+        sentencia_write();
     else if(isalpha(tokenActual[0]))
         sentencia_asignacion();
+
 }
 
 void sentencia_if(){
@@ -103,6 +105,11 @@ void sentencia_if(){
 
 void sentencia_repeat(){
 
+    match("repeat");
+    secuencia_sent();
+    match("until");
+    expresion();
+
 }
 
 void sentencia_asignacion(){
@@ -116,10 +123,17 @@ void sentencia_asignacion(){
 
 void sentencia_read(){
 
+    match("read");
+
+    if(isalpha(tokenActual[0])){
+        tokenActual = obtenSigToken();
+    }
 }
 
-void sentencia_writet(){
+void sentencia_write(){
 
+    match("write");
+    expresion();
 }
 
 void expresion(){
@@ -129,6 +143,28 @@ void expresion(){
         exp_simple();
     }
 
+}
+
+void secuencia_sent(){
+    sentencia();
+
+    if(tokenActual == ";")
+        CPrima();
+    //secuencia_sent();
+
+}
+
+void CPrima(){
+
+    if(tokenActual == ";"){
+        match(tokenActual);
+        sentencia();
+    }
+    if(tokenActual == ";"){
+        match(tokenActual);
+        sentencia();
+        CPrima();
+    }
 }
 
 void exp_simple(){

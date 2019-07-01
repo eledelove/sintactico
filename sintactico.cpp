@@ -8,7 +8,7 @@ class cAnalisisSintactico{
 
 string tokenActual;
 int i, numtokens;
-string tokens[30];
+string tokens[100];
 ifstream inPrograma;
 
 public:
@@ -25,11 +25,12 @@ cAnalisisSintactico(){
         throw 0;
     cout<<"Exito al abrir el programa"<<endl;
     }catch(int i){
-        if(i=0){
+        if(i==0){
             cerr<<"Error al abrir el programa a analizar"<<endl;
         }
     }
     recuperaTokens();
+    //imprimeTokens();
 }
 
 void recuperaTokens(){
@@ -70,6 +71,7 @@ void programa(){
 
     if(tokenActual != "")
         cout<<"Error en programa"<<endl;
+    else cout<<"FIN DEL ANALISIS ... !!"<<endl;
 }
 
 
@@ -151,7 +153,6 @@ void secuencia_sent(){
     if(tokenActual == ";")
         CPrima();
     //secuencia_sent();
-
 }
 
 void CPrima(){
@@ -230,5 +231,6 @@ int main(){
     cAnalisisSintactico miAnalisis;
     //miAnalisis.imprimeTokens();
     miAnalisis.programa();
+    
     return 0;
 }
